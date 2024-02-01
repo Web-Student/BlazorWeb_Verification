@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject IJSRuntime JSRuntime
+@inject IConfiguration config
 @using System.ComponentModel
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
@@ -7,7 +8,7 @@
 
 <div id="google_recaptcha   ">
     <form action="?" method="POST">
-        <div class="g-recaptcha" data-sitekey=@key></div>
+        <div class="g-recaptcha" data-sitekey=@config["siteKey"]></div>
         <br />
         <input type="submit" value="Submit">
     </form>
@@ -21,7 +22,6 @@
 
 @code {
     private string captchaResponse;
-    private string key = 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
