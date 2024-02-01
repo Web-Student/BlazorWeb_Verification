@@ -1,0 +1,58 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+@using System.ComponentModel
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<h3>Google reCAPTCHA</h3>
+
+<div id="google_recaptcha   ">
+    <form action="?" method="POST">
+        <div class="g-recaptcha" data-sitekey=@key></div>
+        <br />
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<button class="btn btn-primary" @onclick="ShowResponse">Show Response</button>
+
+<br />
+
+<p>@captchaResponse</p>
+
+@code {
+    private string captchaResponse;
+    private string key = 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<int>("googleRecaptcha", DotNetObjectReference.Create(this), "google_recaptcha ", "your-sitekey");
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnSuccess(string response)
+    {
+        captchaResponse = response;
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnExpired(string response)
+    {
+        throw new Exception($"Recaptcha Verification Expired: response {response}");
+    }
+
+
+    private void ShowResponse()
+    {
+        captchaResponse = $"The response for the Google reCAPTCHA widget: {captchaResponse}";
+    }
+
+    // public class Keys : PageModel
+    // {
+    //     private readonly IConfiguration _config;
+    //     public IndexModel(ICoiguration config)
+    // }
+   }
