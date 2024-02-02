@@ -1,20 +1,22 @@
 ﻿@page "/"
 @inject IJSRuntime JSRuntime
 @inject IConfiguration config
+@* @rendermode RenderMode.InteractiveServer *@
 @using System.ComponentModel
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <h3>Google reCAPTCHA</h3>
 
 <div id="google_recaptcha   ">
-    <form action="?" method="POST">
+    <form action="?" method="POST" @formname="recaptchaVerification" onsubmit="return false">
         <div class="g-recaptcha" data-sitekey=@config["siteKey"]></div>
         <br />
         <input type="submit" value="Submit">
+        <AntiforgeryToken/>
     </form>
 </div>
 
-<button class="btn btn-primary" @onclick="ShowResponse">Show Response</button>
+<button class="btn btn-primary" @onclick="() => ShowResponse()">Show Response</button>
 
 <br />
 
