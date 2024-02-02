@@ -3,20 +3,20 @@
 @inject IConfiguration config
 @* @rendermode RenderMode.InteractiveServer *@
 @using System.ComponentModel
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 
 <h3>Google reCAPTCHA</h3>
 
-<div id="google_recaptcha   ">
-    <form action="?" method="POST" @formname="recaptchaVerification" onsubmit="return false">
+<div id="google_recaptcha">
+@*     <form action="?" method="POST" @formname="form1" onsubmit="return false">
         <div class="g-recaptcha" data-sitekey=@config["siteKey"]></div>
         <br />
         <input type="submit" value="Submit">
         <AntiforgeryToken/>
-    </form>
+    </form> *@
 </div>
 
-<button class="btn btn-primary" @onclick="() => ShowResponse()">Show Response</button>
+<button class="btn btn-primary" @onclick="ShowResponse">Show Response</button>
 
 <br />
 
@@ -29,7 +29,10 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeAsync<int>("googleRecaptcha", DotNetObjectReference.Create(this), "google_recaptcha ", "your-sitekey");
+            await JSRuntime.InvokeAsync<int>("googleRecaptcha", 
+                DotNetObjectReference.Create(this), 
+                "google_recaptcha", 
+                config["siteKey"]);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
